@@ -11,8 +11,13 @@ class BookModal extends Component {
     title: this.props.title || "",
     author: this.props.author || "",
     email: this.props.email || "",
+    price: this.props.price || "",
     id: this.props.id || "",
-    formErrors: { title: "", author: "", email: "" },
+    formErrors: {
+      title: "field is empty",
+      author: "field is empty",
+      email: "field is invalid"
+    },
     titleValid: false,
     authorValid: false,
     emailValid: false,
@@ -24,6 +29,9 @@ class BookModal extends Component {
     this.setState({
       visible: true
     });
+    this.validateField("title", this.state.title);
+    this.validateField("author", this.state.author);
+    this.validateField("email", this.state.email);
   };
 
   validateField(fieldName, value) {
@@ -77,21 +85,13 @@ class BookModal extends Component {
     });
   };
 
-  handleConsole = () => {
-    console.log("Logic");
-    console.log(this.state.formErrors);
-  }
-
   handleOk = () => {
-    console.log(this.state.formErrors);
-    this.validateField("title", this.state.title);
-    this.validateField("author", this.state.author);
-    this.validateField("email", this.state.email);
     if (this.state.formValid) {
       let values = {
         title: this.state.title,
         author: this.state.author,
         email: this.state.email,
+        price: this.state.price,
         id: this.state.id
       };
       //Send back values to parent to update book
@@ -119,21 +119,6 @@ class BookModal extends Component {
     });
   };
 
-  //Fix:Hacky change
-  // componentDidMount() {
-  //   console.log("componentDidMount");
-  //   this.validateField("title", this.state.title);
-  //   this.validateField("author", this.state.author);
-  //   this.validateField("email", this.state.email);
-  // }
-
-  // componentWillReceiveProps() {
-  //   console.log("componentWillReceiveProps");
-  //   this.validateField("title", this.state.title);
-  //   this.validateField("author", this.state.author);
-  //   this.validateField("email", this.state.email);
-  // }
-
   render() {
     const { visible, confirmLoading } = this.state;
     const showErrors = this.state.showErrors;
@@ -150,7 +135,7 @@ class BookModal extends Component {
         <Modal
           title={this.props.header}
           visible={visible}
-          onOk={this.handleConsole}
+          onOk={this.handleOk}
           confirmLoading={confirmLoading}
           onCancel={this.handleCancel}
         >
@@ -171,6 +156,12 @@ class BookModal extends Component {
             header="Author Email:"
             content={this.state.email}
             name="email"
+            onChange={this.handleUserInput}
+          />
+          <SingleInput
+            header="Book Price (AUD)"
+            content={this.state.price}
+            name="price"
             onChange={this.handleUserInput}
           />
         </Modal>
