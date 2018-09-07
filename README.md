@@ -91,7 +91,7 @@ ___
 
 ___
 ***
-### [](https://github.com/liam345/BookstoreApplication#Improvements)Future Improvents
+### [](https://github.com/liam345/BookstoreApplication#Improvements)Future Improvements
 ___
 The application can be improved by 
 - Storing books from the api call into browser's localStorage or using a library like redux-persist for caching api requests.
