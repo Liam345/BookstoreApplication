@@ -4,38 +4,37 @@ import { Button } from "antd";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as Actions from "../actions";
+import * as ButtonActions from "../actions/button";
 
 class BookOrderRow extends React.Component {
   state = {
     isDisabled: {}
   };
 
-  handleAdd = () => {
-    this.props.actions.disableButton(this.props.book.id);
+  handleAddToCart = () => {
+    this.props.buttonActions.disableButton(this.props.book.id);
     this.props.actions.addToCart(this.props.book);
     this.props.actions.initQuantity(this.props.book.id);
-    this.props.actions.initQuantityPrice(
-      this.props.book.id,
-      this.props.book.price
-    );
   };
   render() {
-    const { isButtonDisabled } = this.props; //should be called are buttons disabled instead
+    const { areButtonsDisabled } = this.props;
     const { id, title, author } = this.props.book;
     let isDisabled = false;
-    if (typeof isButtonDisabled[id] != "undefined" && isButtonDisabled[id]) {
+    if (
+      typeof areButtonsDisabled[id] !== "undefined" &&
+      areButtonsDisabled[id]
+    ) {
       isDisabled = true;
     }
     return (
       <tr className="table-body">
-        <td>{this.props.book.title}</td>
-        <td>{this.props.book.author}</td>
+        <td>{title}</td>
+        <td>{author}</td>
         <td>
           <Button
             type="primary"
-            //disabled={this.state.isDisabled[this.props.book.id] || false}
             disabled={isDisabled}
-            onClick={this.handleAdd}
+            onClick={this.handleAddToCart}
           >
             Add To Cart
           </Button>
@@ -51,13 +50,14 @@ BookOrderRow.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    isButtonDisabled: state.isButtonDisabled
+    areButtonsDisabled: state.areButtonsDisabled
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(Actions, dispatch)
+    actions: bindActionCreators(Actions, dispatch),
+    buttonActions: bindActionCreators(ButtonActions, dispatch)
   };
 }
 

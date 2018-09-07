@@ -1,16 +1,31 @@
 import React, { Component } from "react";
 import BookOrderRow from "../components/BookOrderRow";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import * as Actions from "../actions";
 
 class BooksOrder extends Component {
+  state = {
+    bookList: []
+  };
+  getApi = () => {
+    fetch("/api/books", {
+      cache: "reload",
+      method: "GET"
+    })
+      .then(response => {
+        if (response.status >= 400) {
+          throw new Error("Bad response from server");
+        }
+        return response.json();
+      })
+      .then(data => this.setState({ bookList: data }))
+      .catch(err => this.props.history.push("/404"));
+  };
+
   componentDidMount() {
-    this.props.actions.requestBooks();
+    this.getApi();
   }
 
   render() {
-    const bookOrderRows = this.props.bookList.map(book => {
+    const bookOrderRows = this.state.bookList.map(book => {
       return <BookOrderRow key={book.id} book={book} />;
     });
     return (
@@ -30,15 +45,4 @@ class BooksOrder extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    bookList: state.bookList.data
-  };
-}
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(Actions, dispatch)
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(BooksOrder);
+export default BooksOrder;

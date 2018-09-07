@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import BookRow from "../components/BookRow";
-import BookModal from "../containers/CRUBookModal";
+import BookModal from "../components/CRUBookModal";
 import { message } from "antd";
+import { Helmet } from "react-helmet";
 
 class BooksTable extends Component {
   constructor(props) {
@@ -44,7 +45,7 @@ class BooksTable extends Component {
         return response.json();
       })
       .then(data => this.setState({ bookList: data }))
-      .catch(err => console.log("caught it", err));
+      .catch(err => this.props.history.push("/404"));
   };
 
   componentDidMount() {
@@ -57,6 +58,12 @@ class BooksTable extends Component {
     });
     return (
       <div className="container">
+        <Helmet>
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
+        </Helmet>
         <table className="table table-striped table-bordered">
           <thead className="table-header">
             <tr>
@@ -70,6 +77,7 @@ class BooksTable extends Component {
                   btnText="Add book"
                   header="Add a new book"
                   handleData={this.postData}
+                  formValid={false}
                 />
               </th>
             </tr>
